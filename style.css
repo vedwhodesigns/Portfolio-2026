@@ -1,0 +1,212 @@
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    background: #1a1a1a;
+}
+
+/* Temp scene background for toggle testing */
+#scene-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(135deg, #3a2f28 0%, #5a4a3a 50%, #3a2f28 100%);
+    transition: background 1s ease;
+}
+
+body.night #scene-bg {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1814 50%, #0d0d0d 100%);
+}
+
+/* ===== Liquid Glass Container ===== */
+.glass-container {
+    position: relative;
+    border-radius: 108px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    isolation: isolate;
+}
+
+/* Glass distortion filter layer */
+.glass-filter {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    filter: url(#lg-dist);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    z-index: 0;
+}
+
+/* Glass semi-transparent overlay */
+.glass-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: rgba(43, 43, 43, 0.64);
+    z-index: 1;
+}
+
+/* Glass specular highlight */
+.glass-specular {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+        inset 0 -1px 0 0 rgba(255, 255, 255, 0.04),
+        inset 1px 0 0 0 rgba(255, 255, 255, 0.06),
+        inset -1px 0 0 0 rgba(255, 255, 255, 0.06);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Glass content (interactive layer) */
+.glass-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+/* ===== Toggle Button ===== */
+#theme-toggle {
+    position: fixed;
+    top: 25px;
+    left: 25px;
+    z-index: 1000;
+    box-shadow: 15px 23px 35px 0 rgba(0, 0, 0, 0.49);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.3s ease;
+    outline: none;
+}
+
+#theme-toggle:hover {
+    transform: scale(1.04);
+    box-shadow: 15px 23px 40px 0 rgba(0, 0, 0, 0.55);
+}
+
+#theme-toggle:active {
+    transform: scale(0.97);
+    box-shadow: 10px 16px 25px 0 rgba(0, 0, 0, 0.45);
+}
+
+#theme-toggle:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.4);
+    outline-offset: 3px;
+}
+
+/* Icon circle button */
+.toggle-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 38px;
+    border-radius: 200px;
+    background: rgba(85, 85, 85, 0.9);
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.toggle-icon-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+.toggle-icon-btn:hover {
+    background: rgba(100, 100, 100, 0.9);
+}
+
+/* Icon SVG */
+#toggle-icon {
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#theme-toggle:hover #toggle-icon {
+    transform: rotate(-15deg);
+}
+
+/* Label pill */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 76px;
+    height: 37px;
+    border-radius: 200px;
+    background: rgba(85, 85, 85, 0.9);
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.toggle-label::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+/* ===== Toggle Animation States ===== */
+.glass-content {
+    transition: none; /* JS handles the swap animation */
+}
+
+/* Icon morph transition */
+#icon-path {
+    transition: d 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== Night state overrides ===== */
+body.night .toggle-icon-btn {
+    background: rgba(75, 75, 85, 0.9);
+}
+
+body.night .toggle-label {
+    background: rgba(75, 75, 85, 0.9);
+}
+
+body.night #theme-toggle .glass-overlay {
+    background: rgba(35, 35, 45, 0.7);
+}
+
+body.night #theme-toggle .glass-specular {
+    box-shadow:
+        inset 0 1px 0 0 rgba(200, 210, 255, 0.1),
+        inset 0 -1px 0 0 rgba(200, 210, 255, 0.03),
+        inset 1px 0 0 0 rgba(200, 210, 255, 0.05),
+        inset -1px 0 0 0 rgba(200, 210, 255, 0.05);
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
