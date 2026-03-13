@@ -27,6 +27,54 @@
         <div class="glass-overlay"></div>
         <div class="glass-specular"></div>
         <div class="glass-content">
+            <!-- Icon: slides between left and right -->
+            <div class="toggle-icon-btn" id="toggle-icon-wrap">
+                <svg id="toggle-icon" viewBox="0 0 24 24" width="16" height="16" fill="white">
+                    <path id="icon-path" d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.14 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05z"/>
+                </svg>
+            </div>
+            <!-- Label: slides between right and left, with text crossfade -->
+            <div class="toggle-label" id="toggle-label">
+                <span class="toggle-label-text visible" id="label-day">Day</span>
+                <span class="toggle-label-text hidden" id="label-night">Night</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scene background (temp for toggle testing) -->
+    <div id="scene-bg"></div>
+
+    <script src="script.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- SVG Filters for Liquid Glass Effect -->
+    <svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+        <defs>
+            <filter id="lg-dist" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="4" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Day/Night Toggle -->
+    <div id="theme-toggle" class="glass-container" role="button" tabindex="0" aria-label="Toggle day and night mode">
+        <div class="glass-filter"></div>
+        <div class="glass-overlay"></div>
+        <div class="glass-specular"></div>
+        <div class="glass-content">
             <div class="toggle-icon-btn" id="toggle-icon-wrap">
                 <svg id="toggle-icon" viewBox="0 0 24 24" width="16" height="16" fill="white">
                     <path id="icon-path" d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.14 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05z"/>
