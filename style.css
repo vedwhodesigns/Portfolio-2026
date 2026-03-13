@@ -1,4 +1,37 @@
-/* ===== Reset & Base ===== */
+/* ============================================
+   Portfolio 2026 — style.css
+   Motion Design System: Apple Liquid Glass
+   ============================================ */
+
+/* -- Motion Tokens -- */
+:root {
+    /* Spring curves */
+    --spring-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
+    --spring-smooth:  cubic-bezier(0.25, 1.0, 0.5, 1.0);
+    --spring-snappy:  cubic-bezier(0.22, 1.2, 0.36, 1.0);
+    --ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+
+    /* Duration scale */
+    --dur-instant:  80ms;
+    --dur-micro:    120ms;
+    --dur-fast:     200ms;
+    --dur-normal:   350ms;
+    --dur-smooth:   500ms;
+    --dur-slow:     800ms;
+
+    /* Toggle geometry */
+    --toggle-padding: 10px;
+    --toggle-gap: 6px;
+    --icon-w: 42px;
+    --icon-h: 38px;
+    --label-w: 76px;
+    --label-h: 37px;
+    --slide-distance: calc(var(--label-w) + var(--toggle-gap));
+}
+
+/* -- Reset & Base -- */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -13,20 +46,22 @@ body {
     background: #1a1a1a;
 }
 
-/* Temp scene background for toggle testing */
+/* -- Scene Background -- */
 #scene-bg {
     position: fixed;
     inset: 0;
     z-index: 0;
     background: linear-gradient(135deg, #3a2f28 0%, #5a4a3a 50%, #3a2f28 100%);
-    transition: background 1s ease;
+    transition: background var(--dur-slow) var(--ease-out-expo);
 }
 
 body.night #scene-bg {
     background: linear-gradient(135deg, #0d0d0d 0%, #1a1814 50%, #0d0d0d 100%);
 }
 
-/* ===== Liquid Glass Container ===== */
+/* ============================================
+   LIQUID GLASS SYSTEM
+   ============================================ */
 .glass-container {
     position: relative;
     border-radius: 108px;
@@ -34,9 +69,10 @@ body.night #scene-bg {
     user-select: none;
     -webkit-user-select: none;
     isolation: isolate;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
-/* Glass distortion filter layer */
 .glass-filter {
     position: absolute;
     inset: 0;
@@ -45,18 +81,18 @@ body.night #scene-bg {
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     z-index: 0;
+    transition: backdrop-filter var(--dur-smooth) var(--ease-out-expo);
 }
 
-/* Glass semi-transparent overlay */
 .glass-overlay {
     position: absolute;
     inset: 0;
     border-radius: inherit;
     background: rgba(43, 43, 43, 0.64);
     z-index: 1;
+    transition: background var(--dur-smooth) var(--ease-out-expo);
 }
 
-/* Glass specular highlight */
 .glass-specular {
     position: absolute;
     inset: 0;
@@ -68,38 +104,57 @@ body.night #scene-bg {
         inset -1px 0 0 0 rgba(255, 255, 255, 0.06);
     z-index: 2;
     pointer-events: none;
+    transition: box-shadow var(--dur-smooth) var(--ease-out-expo);
 }
 
-/* Glass content (interactive layer) */
-.glass-content {
-    position: relative;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-}
-
-/* ===== Toggle Button ===== */
+/* ============================================
+   TOGGLE BUTTON — LAYOUT
+   ============================================ */
 #theme-toggle {
     position: fixed;
     top: 25px;
     left: 25px;
     z-index: 1000;
-    box-shadow: 15px 23px 35px 0 rgba(0, 0, 0, 0.49);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                box-shadow 0.3s ease;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.2);
     outline: none;
+
+    /* Page load: start hidden, JS triggers entrance */
+    opacity: 0;
+    transform: translateY(-16px) scale(0.92);
 }
 
-#theme-toggle:hover {
+/* Page load entrance animation */
+#theme-toggle.entered {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition:
+        opacity var(--dur-smooth) var(--ease-out-expo),
+        transform 700ms var(--spring-bounce);
+}
+
+/* -- Hover: whole pill breathes -- */
+#theme-toggle.entered:hover {
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.25);
+    transition:
+        box-shadow var(--dur-fast) var(--ease-out-quart),
+        transform var(--dur-normal) var(--spring-bounce);
     transform: scale(1.04);
-    box-shadow: 15px 23px 40px 0 rgba(0, 0, 0, 0.55);
 }
 
-#theme-toggle:active {
-    transform: scale(0.97);
-    box-shadow: 10px 16px 25px 0 rgba(0, 0, 0, 0.45);
+/* -- Active: tactile press -- */
+#theme-toggle.entered:active,
+#theme-toggle.pressing {
+    transform: scale(0.96) !important;
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        0 1px 4px rgba(0, 0, 0, 0.15);
+    transition:
+        transform var(--dur-instant) ease-in,
+        box-shadow var(--dur-instant) ease-in;
 }
 
 #theme-toggle:focus-visible {
@@ -107,19 +162,37 @@ body.night #scene-bg {
     outline-offset: 3px;
 }
 
+/* ============================================
+   TOGGLE CONTENT — SLIDING MECHANISM
+   ============================================ */
+.glass-content {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: var(--toggle-gap);
+    padding: var(--toggle-padding);
+    width: calc(var(--icon-w) + var(--label-w) + var(--toggle-gap) + var(--toggle-padding) * 2);
+    height: calc(var(--icon-h) + var(--toggle-padding) * 2);
+}
+
 /* Icon circle button */
 .toggle-icon-btn {
+    position: absolute;
+    left: var(--toggle-padding);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 38px;
+    width: var(--icon-w);
+    height: var(--icon-h);
     border-radius: 200px;
     background: rgba(85, 85, 85, 0.9);
     flex-shrink: 0;
-    transition: background 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    z-index: 2;
+    will-change: transform;
+    transition:
+        transform var(--dur-smooth) var(--spring-snappy),
+        background var(--dur-normal) var(--ease-out-expo);
 }
 
 .toggle-icon-btn::after {
@@ -127,30 +200,23 @@ body.night #scene-bg {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
     pointer-events: none;
 }
 
-.toggle-icon-btn:hover {
-    background: rgba(100, 100, 100, 0.9);
-}
-
-/* Icon SVG */
-#toggle-icon {
-    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-#theme-toggle:hover #toggle-icon {
-    transform: rotate(-15deg);
+#theme-toggle:hover .toggle-icon-btn {
+    background: rgba(100, 100, 100, 0.95);
 }
 
 /* Label pill */
 .toggle-label {
+    position: absolute;
+    right: var(--toggle-padding);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 76px;
-    height: 37px;
+    width: var(--label-w);
+    height: var(--label-h);
     border-radius: 200px;
     background: rgba(85, 85, 85, 0.9);
     font-size: 16px;
@@ -158,8 +224,11 @@ body.night #scene-bg {
     color: white;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: background 0.3s ease;
-    position: relative;
+    z-index: 1;
+    will-change: transform;
+    transition:
+        transform var(--dur-smooth) var(--spring-snappy),
+        background var(--dur-normal) var(--ease-out-expo);
     overflow: hidden;
 }
 
@@ -172,38 +241,118 @@ body.night #scene-bg {
     pointer-events: none;
 }
 
-/* ===== Toggle Animation States ===== */
-.glass-content {
-    transition: none; /* JS handles the swap animation */
+#theme-toggle:hover .toggle-label {
+    background: rgba(100, 100, 100, 0.95);
 }
 
-/* Icon morph transition */
-#icon-path {
-    transition: d 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* -- Label text crossfade -- */
+.toggle-label-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        opacity var(--dur-fast) var(--ease-out-expo),
+        transform var(--dur-normal) var(--spring-smooth);
 }
 
-/* ===== Night state overrides ===== */
+.toggle-label-text.hidden {
+    opacity: 0;
+    transform: translateY(8px) scale(0.85);
+    pointer-events: none;
+}
+
+.toggle-label-text.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* ============================================
+   NIGHT STATE — SLIDE POSITIONS
+   ============================================ */
 body.night .toggle-icon-btn {
+    transform: translateX(var(--slide-distance));
     background: rgba(75, 75, 85, 0.9);
 }
 
 body.night .toggle-label {
+    transform: translateX(calc(var(--slide-distance) * -1));
     background: rgba(75, 75, 85, 0.9);
 }
 
 body.night #theme-toggle .glass-overlay {
-    background: rgba(35, 35, 45, 0.7);
+    background: rgba(30, 30, 42, 0.72);
 }
 
 body.night #theme-toggle .glass-specular {
     box-shadow:
-        inset 0 1px 0 0 rgba(200, 210, 255, 0.1),
-        inset 0 -1px 0 0 rgba(200, 210, 255, 0.03),
-        inset 1px 0 0 0 rgba(200, 210, 255, 0.05),
-        inset -1px 0 0 0 rgba(200, 210, 255, 0.05);
+        inset 0 1px 0 0 rgba(180, 200, 255, 0.1),
+        inset 0 -1px 0 0 rgba(180, 200, 255, 0.03),
+        inset 1px 0 0 0 rgba(180, 200, 255, 0.05),
+        inset -1px 0 0 0 rgba(180, 200, 255, 0.05);
 }
 
-/* ===== Reduced Motion ===== */
+body.night #theme-toggle:hover .toggle-icon-btn,
+body.night #theme-toggle:hover .toggle-label {
+    background: rgba(90, 90, 105, 0.95);
+}
+
+/* ============================================
+   ICON SVG — MORPH + MICRO-MOTION
+   ============================================ */
+#toggle-icon {
+    display: block;
+    transition: transform var(--dur-normal) var(--spring-bounce);
+    will-change: transform;
+}
+
+#theme-toggle:hover #toggle-icon {
+    transform: rotate(-12deg) scale(1.08);
+}
+
+#toggle-icon.morphing-out {
+    transform: scale(0.3) rotate(120deg);
+    opacity: 0;
+    transition:
+        transform var(--dur-fast) ease-in,
+        opacity var(--dur-micro) ease-in;
+}
+
+#toggle-icon.morphing-in {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    transition:
+        transform 400ms var(--spring-bounce),
+        opacity var(--dur-fast) var(--ease-out-expo);
+}
+
+/* ============================================
+   INSTANT MODE — No transitions for page load
+   ============================================ */
+body.no-transitions,
+body.no-transitions *,
+body.no-transitions *::before,
+body.no-transitions *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+}
+
+/* ============================================
+   SWIPE — disable transitions during drag
+   ============================================ */
+#theme-toggle.swiping {
+    transition: none !important;
+}
+
+#theme-toggle.swiping .toggle-icon-btn,
+#theme-toggle.swiping .toggle-label {
+    transition: none !important;
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
